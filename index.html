@@ -6,31 +6,30 @@
 <title>HN Radiology Assistant</title>
 <style>
 body{margin:0;font-family:Tahoma,Arial,sans-serif;background:#eef2f7;direction:rtl;color:#111827}
-.page{max-width:1150px;margin:auto;padding:22px}
+.page{max-width:1180px;margin:auto;padding:22px}
 .header{background:linear-gradient(135deg,#1e3a8a,#2563eb);color:white;border-radius:22px;padding:26px;text-align:center;box-shadow:0 8px 25px rgba(0,0,0,.15);margin-bottom:20px}
-.header h1{margin:0;font-size:31px}
-.header p{margin:9px 0 0;color:#dbeafe}
-.section{display:none}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.header h1{margin:0;font-size:31px}.header p{margin:9px 0 0;color:#dbeafe}
+.section{display:none}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
 .card{background:white;border-radius:18px;padding:24px;text-align:center;border:1px solid #e5e7eb;box-shadow:0 4px 15px rgba(0,0,0,.07);cursor:pointer}
 .card:hover{transform:translateY(-2px);transition:.2s;box-shadow:0 8px 24px rgba(0,0,0,.12)}
 .icon{font-size:38px}.title{font-size:20px;font-weight:bold;margin-top:8px}.subtitle{font-size:13px;color:#6b7280;margin-top:6px}
 .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
 button{border:0;border-radius:11px;padding:12px 17px;font-family:Tahoma,Arial,sans-serif;font-size:14px;cursor:pointer}
-.back{background:#374151;color:white}.primary{background:#2563eb;color:white}.copy{background:#16a34a;color:white}.clear{background:#dc2626;color:white}
+.back{background:#374151;color:white}.primary{background:#2563eb;color:white}.copy{background:#16a34a;color:white}.clear{background:#dc2626;color:white}.add{background:#7c3aed;color:white}
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
 .panel{background:white;border-radius:18px;padding:18px;border:1px solid #e5e7eb;box-shadow:0 4px 15px rgba(0,0,0,.07);margin-bottom:14px}
 h2{margin:0 0 12px;font-size:18px;color:#1f2937;border-bottom:1px solid #e5e7eb;padding-bottom:9px}
 label{display:block;margin-top:10px;font-weight:bold;color:#374151}
 input,select,textarea{width:100%;box-sizing:border-box;padding:10px;margin-top:6px;border:1px solid #d1d5db;border-radius:9px;font-family:Tahoma,Arial,sans-serif;font-size:14px}
-textarea{min-height:570px;line-height:2;white-space:pre-wrap}
+textarea{min-height:610px;line-height:2;white-space:pre-wrap}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.check{display:flex;align-items:center;gap:8px;font-weight:normal;margin-top:10px}
-.check input{width:auto}
 .gender-box{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
 .gender-box button{background:#f3f4f6;color:#374151;border:1px solid #d1d5db}
 .gender-box button.active{background:#2563eb;color:white;border-color:#2563eb}
 .badge{display:inline-block;background:#eff6ff;color:#1d4ed8;border-radius:999px;padding:5px 10px;font-size:12px;margin-bottom:8px}
+.finding-card{border:1px solid #ddd6fe;background:#faf5ff;border-radius:14px;padding:14px;margin-top:12px}
+.finding-card h3{margin:0 0 8px;color:#5b21b6;font-size:16px}
+.hidden{display:none}
 .footer{text-align:center;margin-top:18px;color:#9ca3af;font-size:13px}
 @media(max-width:850px){.grid,.form-grid,.row,.gender-box{grid-template-columns:1fr}}
 </style>
@@ -78,6 +77,7 @@ textarea{min-height:570px;line-height:2;white-space:pre-wrap}
 <div class="form-grid">
 
 <div>
+
 <div class="panel">
 <span class="badge">Patient Information</span>
 <h2>اطلاعات بیمار</h2>
@@ -120,32 +120,61 @@ textarea{min-height:570px;line-height:2;white-space:pre-wrap}
 </div>
 
 <div class="panel">
-<span class="badge">Pathologic Findings</span>
-<h2>یافته‌های پاتولوژیک</h2>
+<span class="badge">HN Finding Bank</span>
+<h2>بانک یافته‌های اختصاصی</h2>
 
-<label class="check"><input type="checkbox" id="fattyLiver"> کبد چرب گرید I</label>
+<label>افزودن یافته</label>
+<select id="findingSelect">
+<option value="">انتخاب یافته...</option>
+<option value="fattyLiver">کبد چرب گرید I</option>
+<option value="appendicitis">آپاندیسیت حاد</option>
+<option value="bph">BPH</option>
+<option value="bladderWall">افزایش ضخامت جدار مثانه</option>
+<option value="bladderDebris">دبری اکوژن مختصر شناور در مثانه</option>
+</select>
+<button class="add" onclick="addFinding()">افزودن یافته</button>
 
-<label class="check"><input type="checkbox" id="appendicitis"> آپاندیسیت حاد</label>
-<label>قطر آپاندیس</label>
-<input id="appendixDiameter" placeholder="mm">
-
-<div id="maleFields">
-<label class="check"><input type="checkbox" id="bph"> BPH</label>
-<label>حجم پروستات</label>
-<input id="prostateVolume" placeholder="cc">
+<div id="findingList"></div>
 </div>
 
-<div id="femaleFields" style="display:none;">
+<div class="finding-card hidden" id="fattyLiverCard">
+<h3>کبد چرب گرید I</h3>
+<button class="clear" onclick="removeFinding('fattyLiver')">حذف</button>
+</div>
+
+<div class="finding-card hidden" id="appendicitisCard">
+<h3>آپاندیسیت حاد</h3>
+<label>قطر آپاندیس</label>
+<input id="appendixDiameter" placeholder="mm">
+<button class="clear" onclick="removeFinding('appendicitis')">حذف</button>
+</div>
+
+<div class="finding-card hidden" id="bphCard">
+<h3>BPH</h3>
+<label>حجم پروستات</label>
+<input id="prostateVolume" placeholder="cc">
+<button class="clear" onclick="removeFinding('bph')">حذف</button>
+</div>
+
+<div class="finding-card hidden" id="bladderWallCard">
+<h3>افزایش ضخامت جدار مثانه</h3>
+<label>ضخامت جدار مثانه</label>
+<input id="bladderWallThickness" placeholder="mm">
+<button class="clear" onclick="removeFinding('bladderWall')">حذف</button>
+</div>
+
+<div class="finding-card hidden" id="bladderDebrisCard">
+<h3>دبری اکوژن مختصر شناور در مثانه</h3>
+<button class="clear" onclick="removeFinding('bladderDebris')">حذف</button>
+</div>
+
+<div class="panel" id="femaleFields" style="display:none;">
+<span class="badge">Female Pelvis</span>
+<h2>لگن خانم</h2>
 <label>ضخامت آندومتر</label>
 <input id="endometriumThickness" placeholder="mm">
 </div>
 
-<label class="check"><input type="checkbox" id="bladderWall"> افزایش ضخامت جدار مثانه</label>
-<label>ضخامت جدار مثانه</label>
-<input id="bladderWallThickness" placeholder="mm">
-
-<label class="check"><input type="checkbox" id="bladderDebris"> دبری اکوژن مختصر شناور در مثانه</label>
-</div>
 </div>
 
 <div class="panel">
@@ -157,11 +186,18 @@ textarea{min-height:570px;line-height:2;white-space:pre-wrap}
 </div>
 </div>
 
-<div class="footer">Version 0.4 — Clinical Abdomen & Pelvis UI</div>
+<div class="footer">Version 0.5 — HN Finding Bank</div>
 </div>
 
 <script>
 let currentGender="male";
+let findings={
+fattyLiver:false,
+appendicitis:false,
+bph:false,
+bladderWall:false,
+bladderDebris:false
+};
 
 function showSection(id){
 document.querySelectorAll(".section").forEach(s=>s.style.display="none");
@@ -172,8 +208,8 @@ function setGender(g){
 currentGender=g;
 document.getElementById("maleBtn").classList.toggle("active",g==="male");
 document.getElementById("femaleBtn").classList.toggle("active",g==="female");
-document.getElementById("maleFields").style.display=g==="male"?"block":"none";
 document.getElementById("femaleFields").style.display=g==="female"?"block":"none";
+if(g==="female"){removeFinding("bph")}
 }
 
 function v(id,fallback="..."){
@@ -181,9 +217,39 @@ const el=document.getElementById(id);
 return el&&el.value.trim()?el.value.trim():fallback;
 }
 
-function c(id){
-const el=document.getElementById(id);
-return el&&el.checked;
+function addFinding(){
+const f=document.getElementById("findingSelect").value;
+if(!f)return;
+if(f==="bph"&&currentGender==="female"){alert("BPH فقط برای آقا فعال است.");return;}
+findings[f]=true;
+renderFindings();
+document.getElementById("findingSelect").value="";
+}
+
+function removeFinding(f){
+findings[f]=false;
+renderFindings();
+}
+
+function renderFindings(){
+const labels={
+fattyLiver:"کبد چرب گرید I",
+appendicitis:"آپاندیسیت حاد",
+bph:"BPH",
+bladderWall:"افزایش ضخامت جدار مثانه",
+bladderDebris:"دبری اکوژن مختصر شناور در مثانه"
+};
+
+Object.keys(findings).forEach(f=>{
+const card=document.getElementById(f+"Card");
+if(card)card.classList.toggle("hidden",!findings[f]);
+});
+
+let html="";
+Object.keys(findings).forEach(f=>{
+if(findings[f])html+="<div class='badge'>"+labels[f]+"</div> ";
+});
+document.getElementById("findingList").innerHTML=html || "<div style='color:#6b7280;margin-top:10px'>هنوز یافته‌ای اضافه نشده است.</div>";
 }
 
 function generateAbdomenReport(){
@@ -192,10 +258,9 @@ let indication=v("indication","");
 
 report+="نام و نام خانوادگی: "+v("patientName","")+"\n\n";
 report+="سن: "+v("age","")+"\n\n";
+if(indication!=="")report+="اندیکاسیون: "+indication+"\n\n";
 
-if(indication!=="") report+="اندیکاسیون: "+indication+"\n\n";
-
-if(c("fattyLiver")){
+if(findings.fattyLiver){
 report+="افزایش مختصر اکوی پارانشیم کبد به نفع کبد چرب گرید I رویت شد. شواهدی از ضایعه فضاگیر یا اتساع مجاری صفراوی داخل و خارج کبدی رویت نشد.\n\n";
 }else{
 report+="کبد از نظر اندازه، اکوپترن و حدود طبیعی است. شواهدی از ضایعه فضاگیر یا اتساع مجاری صفراوی داخل و خارج کبدی رویت نشد.\n\n";
@@ -207,18 +272,18 @@ report+="پانکراس از نظر اندازه و اکوپترن طبیعی ا
 
 report+="کلیه راست به قطر طولی "+v("rkLength")+" میلی‌متر و ضخامت پارانشیم "+v("rkParenchyma")+" میلی‌متر و کلیه چپ به قطر طولی "+v("lkLength")+" میلی‌متر و ضخامت پارانشیم "+v("lkParenchyma")+" میلی‌متر اندازه‌گیری شدند. اکوی پارانشیم هر دو کلیه طبیعی بوده و افتراق کورتیکومدولاری حفظ شده است. شواهدی از هیدرونفروز یا سنگ قابل مشاهده در کلیه‌ها رویت نشد.\n\n";
 
-if(c("bladderWall")&&c("bladderDebris")){
+if(findings.bladderWall&&findings.bladderDebris){
 report+="مثانه دارای ضخامت جدار مختصراً افزایش یافته، حدود "+v("bladderWallThickness")+" میلی‌متر است. چند دبری اکوژن مختصر شناور در داخل مثانه رویت شد که می‌تواند در زمینه هماتوری، پیوری یا کریستالوری باشد. در صورت صلاحدید بالینی، تطبیق با یافته‌های UA و UC توصیه می‌شود.\n\n";
-}else if(c("bladderWall")){
+}else if(findings.bladderWall){
 report+="مثانه دارای ضخامت جدار مختصراً افزایش یافته، حدود "+v("bladderWallThickness")+" میلی‌متر است.\n\n";
-}else if(c("bladderDebris")){
+}else if(findings.bladderDebris){
 report+="مثانه دارای ضخامت جدار طبیعی است. چند دبری اکوژن مختصر شناور در داخل مثانه رویت شد که می‌تواند در زمینه هماتوری، پیوری یا کریستالوری باشد. در صورت صلاحدید بالینی، تطبیق با یافته‌های UA و UC توصیه می‌شود.\n\n";
 }else{
 report+="مثانه دارای ضخامت جدار و محتویات طبیعی است.\n\n";
 }
 
 if(currentGender==="male"){
-if(c("bph")){
+if(findings.bph){
 report+="پروستات با حجم تقریبی "+v("prostateVolume")+" سی‌سی بزرگ‌تر از حد طبیعی بوده و نمای آن به نفع BPH است.\n\n";
 }else{
 report+="پروستات از نظر اندازه و اکوپترن طبیعی است.\n\n";
@@ -227,7 +292,7 @@ report+="پروستات از نظر اندازه و اکوپترن طبیعی ا
 report+="رحم از نظر اندازه و اکوپترن طبیعی است. ضخامت آندومتر "+v("endometriumThickness")+" میلی‌متر است. تخمدان‌های دو طرف از نظر اندازه و اکوپترن طبیعی بوده و ضایعه آدنکسال مشاهده نشد.\n\n";
 }
 
-if(c("appendicitis")){
+if(findings.appendicitis){
 report+="در ناحیه RLQ، آپاندیس با قطر حدود "+v("appendixDiameter")+" میلی‌متر، غیرقابل فشرده شدن و همراه با تغییرات التهابی چربی اطراف رویت شد که به نفع آپاندیسیت حاد است. در حد قابل ارزیابی، شواهدی از collection یا perforation مشاهده نشد.\n\n";
 }
 
@@ -236,15 +301,15 @@ report+="مایع آزاد در حفره صفاقی مشاهده نشد.\n\n";
 report+="نتیجه‌گیری:\n\n";
 
 let imp=[];
-if(c("appendicitis"))imp.push("شواهد سونوگرافیک به نفع آپاندیسیت حاد با قطر حدود "+v("appendixDiameter")+" میلی‌متر و التهاب چربی اطراف، بدون شواهد collection یا perforation در حد قابل ارزیابی");
-if(c("fattyLiver"))imp.push("کبد چرب گرید I");
-if(currentGender==="male"&&c("bph"))imp.push("بزرگی پروستات با حجم تقریبی "+v("prostateVolume")+" سی‌سی به نفع BPH");
+if(findings.appendicitis)imp.push("شواهد سونوگرافیک به نفع آپاندیسیت حاد با قطر حدود "+v("appendixDiameter")+" میلی‌متر و التهاب چربی اطراف، بدون شواهد collection یا perforation در حد قابل ارزیابی");
+if(findings.fattyLiver)imp.push("کبد چرب گرید I");
+if(currentGender==="male"&&findings.bph)imp.push("بزرگی پروستات با حجم تقریبی "+v("prostateVolume")+" سی‌سی به نفع BPH");
 
-if(c("bladderWall")&&c("bladderDebris")){
+if(findings.bladderWall&&findings.bladderDebris){
 imp.push("افزایش خفیف ضخامت جدار مثانه همراه با چند دبری اکوژن شناور که می‌تواند در زمینه هماتوری، پیوری یا کریستالوری باشد؛ در صورت صلاحدید بالینی، تطبیق با یافته‌های UA و UC توصیه می‌شود");
-}else if(c("bladderWall")){
+}else if(findings.bladderWall){
 imp.push("افزایش خفیف ضخامت جدار مثانه");
-}else if(c("bladderDebris")){
+}else if(findings.bladderDebris){
 imp.push("چند دبری اکوژن شناور در مثانه که می‌تواند در زمینه هماتوری، پیوری یا کریستالوری باشد؛ در صورت صلاحدید بالینی، تطبیق با یافته‌های UA و UC توصیه می‌شود");
 }
 
@@ -261,11 +326,15 @@ alert("گزارش کپی شد.");
 }
 
 function clearForm(){
-document.querySelectorAll("input").forEach(el=>{if(el.type==="checkbox")el.checked=false;else el.value=""});
+document.querySelectorAll("input").forEach(el=>el.value="");
 document.getElementById("indication").value="";
-setGender("male");
 document.getElementById("report").value="";
+Object.keys(findings).forEach(f=>findings[f]=false);
+setGender("male");
+renderFindings();
 }
+
+renderFindings();
 </script>
 </body>
 </html>

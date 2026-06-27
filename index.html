@@ -15,18 +15,18 @@
     }
 
     .page {
-      max-width: 900px;
+      max-width: 1100px;
       margin: 0 auto;
-      padding: 30px 18px;
+      padding: 24px 16px;
     }
 
     .header {
-      background: #ffffff;
+      background: white;
       border-radius: 18px;
-      padding: 28px;
+      padding: 24px;
       text-align: center;
       box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-      margin-bottom: 24px;
+      margin-bottom: 20px;
     }
 
     .header h1 {
@@ -36,121 +36,370 @@
     }
 
     .header p {
-      margin-top: 10px;
       color: #6b7280;
-      font-size: 15px;
+      margin: 8px 0 0;
     }
 
     .grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 16px;
+      gap: 14px;
     }
 
     .card {
       background: white;
       border-radius: 16px;
-      padding: 24px;
+      padding: 22px;
       text-align: center;
+      border: 1px solid #e5e7eb;
       box-shadow: 0 3px 14px rgba(0,0,0,0.07);
       cursor: pointer;
-      transition: 0.2s;
-      border: 1px solid #e5e7eb;
     }
 
     .card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 6px 22px rgba(0,0,0,0.12);
+      transform: translateY(-2px);
+      transition: 0.2s;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.12);
     }
 
-    .icon {
-      font-size: 38px;
-      margin-bottom: 12px;
+    .icon { font-size: 36px; }
+    .title { font-size: 19px; font-weight: bold; margin-top: 8px; }
+    .subtitle { color: #6b7280; font-size: 13px; margin-top: 6px; }
+
+    .section { display: none; }
+
+    .toolbar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
     }
 
-    .title {
+    button {
+      border: 0;
+      border-radius: 10px;
+      padding: 11px 16px;
+      font-family: Tahoma, Arial, sans-serif;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .back { background: #374151; color: white; }
+    .primary { background: #2563eb; color: white; }
+    .copy { background: #16a34a; color: white; }
+    .clear { background: #dc2626; color: white; }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .panel {
+      background: white;
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: 0 3px 14px rgba(0,0,0,0.07);
+      border: 1px solid #e5e7eb;
+    }
+
+    h2 {
+      margin-top: 0;
       font-size: 20px;
-      font-weight: bold;
-      color: #111827;
+      color: #1f2937;
+      border-bottom: 1px solid #e5e7eb;
+      padding-bottom: 8px;
     }
 
-    .subtitle {
-      margin-top: 8px;
-      font-size: 13px;
-      color: #6b7280;
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+      color: #374151;
     }
+
+    input, select, textarea {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 10px;
+      margin-top: 6px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-family: Tahoma, Arial, sans-serif;
+      font-size: 14px;
+    }
+
+    textarea {
+      min-height: 520px;
+      line-height: 2;
+      white-space: pre-wrap;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .check {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: normal;
+      margin-top: 10px;
+    }
+
+    .check input { width: auto; }
 
     .footer {
       text-align: center;
-      margin-top: 24px;
+      margin-top: 18px;
       color: #9ca3af;
       font-size: 13px;
     }
 
-    @media (max-width: 700px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
-
-      .header h1 {
-        font-size: 24px;
-      }
+    @media (max-width: 800px) {
+      .grid, .form-grid, .row { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 
 <body>
-  <div class="page">
+<div class="page">
 
-    <div class="header">
-      <h1>HN Radiology Assistant</h1>
-      <p>دستیار اختصاصی گزارش‌نویسی رادیولوژی دکتر هاشم نشاطی</p>
-    </div>
+  <div class="header">
+    <h1>HN Radiology Assistant</h1>
+    <p>دستیار اختصاصی گزارش‌نویسی رادیولوژی دکتر هاشم نشاطی</p>
+  </div>
 
+  <div id="home" class="section" style="display:block;">
     <div class="grid">
-
-      <div class="card" onclick="alert('بخش Ultrasound در مرحله بعد ساخته می‌شود.')">
+      <div class="card" onclick="showSection('ultrasoundMenu')">
         <div class="icon">🩻</div>
         <div class="title">Ultrasound</div>
         <div class="subtitle">گزارش‌های سونوگرافی</div>
       </div>
 
-      <div class="card" onclick="alert('بخش MRI در نسخه‌های بعدی اضافه می‌شود.')">
+      <div class="card">
         <div class="icon">🧠</div>
         <div class="title">MRI</div>
-        <div class="subtitle">گزارش‌های MRI</div>
+        <div class="subtitle">در نسخه‌های بعدی</div>
       </div>
 
-      <div class="card" onclick="alert('بخش Mammography در نسخه‌های بعدی اضافه می‌شود.')">
+      <div class="card">
         <div class="icon">🎗️</div>
         <div class="title">Mammography</div>
-        <div class="subtitle">گزارش‌های ماموگرافی</div>
+        <div class="subtitle">در نسخه‌های بعدی</div>
       </div>
 
-      <div class="card" onclick="alert('بخش X-Ray در نسخه‌های بعدی اضافه می‌شود.')">
+      <div class="card">
         <div class="icon">🦴</div>
         <div class="title">X-Ray</div>
-        <div class="subtitle">گزارش‌های رادیوگرافی</div>
+        <div class="subtitle">در نسخه‌های بعدی</div>
       </div>
 
-      <div class="card" onclick="alert('کتابخانه جملات اختصاصی در مرحله بعد اضافه می‌شود.')">
+      <div class="card">
         <div class="icon">📚</div>
         <div class="title">Sentence Library</div>
-        <div class="subtitle">بانک جملات اختصاصی گزارش‌ها</div>
+        <div class="subtitle">بانک جملات اختصاصی</div>
       </div>
 
-      <div class="card" onclick="alert('تنظیمات در نسخه‌های بعدی اضافه می‌شود.')">
+      <div class="card">
         <div class="icon">⚙️</div>
         <div class="title">Settings</div>
-        <div class="subtitle">تنظیمات نرم‌افزار</div>
+        <div class="subtitle">تنظیمات</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="ultrasoundMenu" class="section">
+    <div class="toolbar">
+      <button class="back" onclick="showSection('home')">بازگشت</button>
+    </div>
+
+    <div class="grid">
+      <div class="card" onclick="showSection('abdomenPelvis')">
+        <div class="icon">🩻</div>
+        <div class="title">Abdomen & Pelvis</div>
+        <div class="subtitle">شکم و لگن</div>
       </div>
 
+      <div class="card"><div class="icon">🫘</div><div class="title">Kidney & Urinary Tract</div><div class="subtitle">در مرحله بعد</div></div>
+      <div class="card"><div class="icon">🦋</div><div class="title">Thyroid</div><div class="subtitle">در مرحله بعد</div></div>
+      <div class="card"><div class="icon">🟣</div><div class="title">Soft Tissue</div><div class="subtitle">در مرحله بعد</div></div>
+      <div class="card"><div class="icon">🔴</div><div class="title">Venous Doppler</div><div class="subtitle">در مرحله بعد</div></div>
+      <div class="card"><div class="icon">👶</div><div class="title">OB</div><div class="subtitle">در مرحله بعد</div></div>
     </div>
-
-    <div class="footer">
-      Version 0.1 — HN Radiology Assistant
-    </div>
-
   </div>
+
+  <div id="abdomenPelvis" class="section">
+    <div class="toolbar">
+      <button class="back" onclick="showSection('ultrasoundMenu')">بازگشت به سونوگرافی</button>
+      <button class="primary" onclick="generateAbdomenReport()">تولید گزارش</button>
+      <button class="copy" onclick="copyReport()">کپی گزارش</button>
+      <button class="clear" onclick="clearForm()">پاک کردن</button>
+    </div>
+
+    <div class="form-grid">
+      <div class="panel">
+        <h2>سونوگرافی شکم و لگن - آقا</h2>
+
+        <label>نام و نام خانوادگی</label>
+        <input id="patientName" placeholder="مثلاً حسین حسینی">
+
+        <label>سن</label>
+        <input id="age" placeholder="مثلاً 34 سال">
+
+        <h2>کلیه‌ها</h2>
+        <div class="row">
+          <div>
+            <label>قطر طولی کلیه راست</label>
+            <input id="rkLength" placeholder="mm">
+          </div>
+          <div>
+            <label>ضخامت پارانشیم کلیه راست</label>
+            <input id="rkParenchyma" placeholder="mm">
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label>قطر طولی کلیه چپ</label>
+            <input id="lkLength" placeholder="mm">
+          </div>
+          <div>
+            <label>ضخامت پارانشیم کلیه چپ</label>
+            <input id="lkParenchyma" placeholder="mm">
+          </div>
+        </div>
+
+        <h2>یافته‌های شایع</h2>
+
+        <label class="check"><input type="checkbox" id="fattyLiver"> کبد چرب گرید I</label>
+
+        <label class="check"><input type="checkbox" id="appendicitis"> آپاندیسیت حاد</label>
+        <label>قطر آپاندیس</label>
+        <input id="appendixDiameter" placeholder="مثلاً 11">
+
+        <label class="check"><input type="checkbox" id="bph"> BPH</label>
+        <label>حجم پروستات</label>
+        <input id="prostateVolume" placeholder="cc">
+
+        <label class="check"><input type="checkbox" id="bladderWall"> افزایش ضخامت جدار مثانه</label>
+        <label>ضخامت جدار مثانه</label>
+        <input id="bladderWallThickness" placeholder="mm">
+
+        <label class="check"><input type="checkbox" id="bladderDebris"> دبری اکوژن مختصر شناور در مثانه</label>
+      </div>
+
+      <div class="panel">
+        <h2>گزارش نهایی</h2>
+        <textarea id="report" readonly></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">Version 0.2 — HN Radiology Assistant</div>
+
+</div>
+
+<script>
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
+  document.getElementById(id).style.display = 'block';
+}
+
+function v(id, fallback="...") {
+  const el = document.getElementById(id);
+  return el && el.value.trim() ? el.value.trim() : fallback;
+}
+
+function c(id) {
+  const el = document.getElementById(id);
+  return el && el.checked;
+}
+
+function generateAbdomenReport() {
+  let report = "";
+
+  report += "نام و نام خانوادگی: " + v("patientName", "") + "\n\n";
+  report += "سن: " + v("age", "") + "\n\n";
+
+  if (c("fattyLiver")) {
+    report += "افزایش مختصر اکوی پارانشیم کبد به نفع کبد چرب گرید I رویت شد. شواهدی از ضایعه فضاگیر یا اتساع مجاری صفراوی داخل و خارج کبدی رویت نشد.\n\n";
+  } else {
+    report += "کبد از نظر اندازه، اکوپترن و حدود طبیعی است. شواهدی از ضایعه فضاگیر یا اتساع مجاری صفراوی داخل و خارج کبدی رویت نشد.\n\n";
+  }
+
+  report += "کیسه صفرا از نظر اندازه، ضخامت جدار و محتویات طبیعی است.\n\n";
+  report += "طحال از نظر اندازه و اکوپترن طبیعی است.\n\n";
+  report += "پانکراس از نظر اندازه و اکوپترن طبیعی است.\n\n";
+
+  report += "کلیه راست به قطر طولی " + v("rkLength") + " میلی‌متر و ضخامت پارانشیم " + v("rkParenchyma") + " میلی‌متر و کلیه چپ به قطر طولی " + v("lkLength") + " میلی‌متر و ضخامت پارانشیم " + v("lkParenchyma") + " میلی‌متر اندازه‌گیری شدند. اکوی پارانشیم هر دو کلیه طبیعی بوده و افتراق کورتیکومدولاری حفظ شده است. شواهدی از هیدرونفروز یا سنگ قابل مشاهده در کلیه‌ها رویت نشد.\n\n";
+
+  if (c("bladderWall") && c("bladderDebris")) {
+    report += "مثانه دارای ضخامت جدار مختصراً افزایش یافته، حدود " + v("bladderWallThickness") + " میلی‌متر است. چند دبری اکوژن مختصر شناور در داخل مثانه رویت شد که می‌تواند در زمینه هماتوری، پیوری یا کریستالوری باشد. در صورت صلاحدید بالینی، تطبیق با یافته‌های UA و UC توصیه می‌شود.\n\n";
+  } else if (c("bladderWall")) {
+    report += "مثانه دارای ضخامت جدار مختصراً افزایش یافته، حدود " + v("bladderWallThickness") + " میلی‌متر است.\n\n";
+  } else if (c("bladderDebris")) {
+    report += "مثانه دارای ضخامت جدار طبیعی است. چند دبری اکوژن مختصر شناور در داخل مثانه رویت شد که می‌تواند در زمینه هماتوری، پیوری یا کریستالوری باشد. در صورت صلاحدید بالینی، تطبیق با یافته‌های UA و UC توصیه می‌شود.\n\n";
+  } else {
+    report += "مثانه دارای ضخامت جدار و محتویات طبیعی است.\n\n";
+  }
+
+  if (c("bph")) {
+    report += "پروستات با حجم تقریبی " + v("prostateVolume") + " سی‌سی بزرگ‌تر از حد طبیعی بوده و نمای آن به نفع BPH است.\n\n";
+  } else {
+    report += "پروستات از نظر اندازه و اکوپترن طبیعی است.\n\n";
+  }
+
+  if (c("appendicitis")) {
+    report += "در ناحیه RLQ، آپاندیس با قطر حدود " + v("appendixDiameter") + " میلی‌متر، غیرقابل فشرده شدن و همراه با تغییرات التهابی چربی اطراف رویت شد که به نفع آپاندیسیت حاد است. در حد قابل ارزیابی، شواهدی از collection یا perforation مشاهده نشد.\n\n";
+  }
+
+  report += "ضایعه پاتولوژیک واضحی در فضای پاراآئورتیک رویت نشد.\n\n";
+  report += "مایع آزاد در حفره صفاقی مشاهده نشد.\n\n";
+
+  report += "نتیجه‌گیری:\n\n";
+
+  let imp = [];
+
+  if (c("appendicitis")) {
+    imp.push("شواهد سونوگرافیک به نفع آپاندیسیت حاد با قطر حدود " + v("appendixDiameter") + " میلی‌متر و التهاب چربی اطراف، بدون شواهد collection یا perforation در حد قابل ارزیابی");
+  }
+
+  if (c("fattyLiver")) imp.push("کبد چرب گرید I");
+  if (c("bph")) imp.push("بزرگی پروستات با حجم تقریبی " + v("prostateVolume") + " سی‌سی به نفع BPH");
+
+  if (c("bladderWall") && c("bladderDebris")) {
+    imp.push("افزایش خفیف ضخامت جدار مثانه همراه با چند دبری اکوژن شناور که می‌تواند در زمینه هماتوری، پیوری یا کریستالوری باشد؛ در صورت صلاحدید بالینی، تطبیق با یافته‌های UA و UC توصیه می‌شود");
+  } else if (c("bladderWall")) {
+    imp.push("افزایش خفیف ضخامت جدار مثانه");
+  } else if (c("bladderDebris")) {
+    imp.push("چند دبری اکوژن شناور در مثانه که می‌تواند در زمینه هماتوری، پیوری یا کریستالوری باشد؛ در صورت صلاحدید بالینی، تطبیق با یافته‌های UA و UC توصیه می‌شود");
+  }
+
+  report += imp.length ? imp.join(". ") + "." : "سونوگرافی شکم و لگن در حد بررسی انجام‌شده طبیعی است.";
+
+  document.getElementById("report").value = report;
+}
+
+function copyReport() {
+  const report = document.getElementById("report");
+  report.select();
+  report.setSelectionRange(0, 99999);
+  navigator.clipboard.writeText(report.value);
+  alert("گزارش کپی شد.");
+}
+
+function clearForm() {
+  document.querySelectorAll("input").forEach(el => {
+    if (el.type === "checkbox") el.checked = false;
+    else el.value = "";
+  });
+  document.getElementById("report").value = "";
+}
+</script>
+
 </body>
 </html>

@@ -2,10 +2,155 @@
 <html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HN Radiology Assistant</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Tahoma, Arial, sans-serif;
+      background: #f3f4f6;
+      direction: rtl;
+      color: #111827;
+    }
+
+    .page {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 30px 18px;
+    }
+
+    .header {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 28px;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      margin-bottom: 24px;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 30px;
+      color: #1f2937;
+    }
+
+    .header p {
+      margin-top: 10px;
+      color: #6b7280;
+      font-size: 15px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+      box-shadow: 0 3px 14px rgba(0,0,0,0.07);
+      cursor: pointer;
+      transition: 0.2s;
+      border: 1px solid #e5e7eb;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 22px rgba(0,0,0,0.12);
+    }
+
+    .icon {
+      font-size: 38px;
+      margin-bottom: 12px;
+    }
+
+    .title {
+      font-size: 20px;
+      font-weight: bold;
+      color: #111827;
+    }
+
+    .subtitle {
+      margin-top: 8px;
+      font-size: 13px;
+      color: #6b7280;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 24px;
+      color: #9ca3af;
+      font-size: 13px;
+    }
+
+    @media (max-width: 700px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .header h1 {
+        font-size: 24px;
+      }
+    }
+  </style>
 </head>
+
 <body>
-  <h1>HN Radiology Assistant</h1>
-  <p>نسخه آزمایشی اولیه با موفقیت اجرا شد.</p>
+  <div class="page">
+
+    <div class="header">
+      <h1>HN Radiology Assistant</h1>
+      <p>دستیار اختصاصی گزارش‌نویسی رادیولوژی دکتر حشمی نشاطی</p>
+    </div>
+
+    <div class="grid">
+
+      <div class="card" onclick="alert('بخش Ultrasound در مرحله بعد ساخته می‌شود.')">
+        <div class="icon">🩻</div>
+        <div class="title">Ultrasound</div>
+        <div class="subtitle">گزارش‌های سونوگرافی</div>
+      </div>
+
+      <div class="card" onclick="alert('بخش MRI در نسخه‌های بعدی اضافه می‌شود.')">
+        <div class="icon">🧠</div>
+        <div class="title">MRI</div>
+        <div class="subtitle">گزارش‌های MRI</div>
+      </div>
+
+      <div class="card" onclick="alert('بخش Mammography در نسخه‌های بعدی اضافه می‌شود.')">
+        <div class="icon">🎗️</div>
+        <div class="title">Mammography</div>
+        <div class="subtitle">گزارش‌های ماموگرافی</div>
+      </div>
+
+      <div class="card" onclick="alert('بخش X-Ray در نسخه‌های بعدی اضافه می‌شود.')">
+        <div class="icon">🦴</div>
+        <div class="title">X-Ray</div>
+        <div class="subtitle">گزارش‌های رادیوگرافی</div>
+      </div>
+
+      <div class="card" onclick="alert('کتابخانه جملات اختصاصی در مرحله بعد اضافه می‌شود.')">
+        <div class="icon">📚</div>
+        <div class="title">Sentence Library</div>
+        <div class="subtitle">بانک جملات اختصاصی گزارش‌ها</div>
+      </div>
+
+      <div class="card" onclick="alert('تنظیمات در نسخه‌های بعدی اضافه می‌شود.')">
+        <div class="icon">⚙️</div>
+        <div class="title">Settings</div>
+        <div class="subtitle">تنظیمات نرم‌افزار</div>
+      </div>
+
+    </div>
+
+    <div class="footer">
+      Version 0.1 — HN Radiology Assistant
+    </div>
+
+  </div>
 </body>
 </html>

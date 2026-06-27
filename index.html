@@ -21,7 +21,7 @@ button{border:0;border-radius:11px;padding:12px 17px;font-family:Tahoma,Arial,sa
 h2{margin:0 0 12px;font-size:18px;color:#1f2937;border-bottom:1px solid #e5e7eb;padding-bottom:9px}
 label{display:block;margin-top:10px;font-weight:bold;color:#374151}
 input,select,textarea{width:100%;box-sizing:border-box;padding:10px;margin-top:6px;border:1px solid #d1d5db;border-radius:9px;font-family:Tahoma,Arial,sans-serif;font-size:14px}
-textarea{min-height:610px;line-height:2;white-space:pre-wrap}
+textarea{min-height:640px;line-height:2;white-space:pre-wrap}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .gender-box{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
 .gender-box button{background:#f3f4f6;color:#374151;border:1px solid #d1d5db}
@@ -83,10 +83,10 @@ textarea{min-height:610px;line-height:2;white-space:pre-wrap}
 <h2>اطلاعات بیمار</h2>
 
 <label>نام و نام خانوادگی</label>
-<input id="patientName" placeholder="مثلاً حسین حسینی">
+<input id="patientName" placeholder="مثلاً رضا حسینی">
 
 <label>سن</label>
-<input id="age" placeholder="مثلاً 34 سال">
+<input id="age" placeholder="مثلاً 30 سال">
 
 <label>جنسیت</label>
 <div class="gender-box">
@@ -126,6 +126,7 @@ textarea{min-height:610px;line-height:2;white-space:pre-wrap}
 <label>افزودن یافته</label>
 <select id="findingSelect">
 <option value="">انتخاب یافته...</option>
+<option value="ureterStone">سنگ حالب</option>
 <option value="fattyLiver">کبد چرب گرید I</option>
 <option value="appendicitis">آپاندیسیت حاد</option>
 <option value="bph">BPH</option>
@@ -135,6 +136,65 @@ textarea{min-height:610px;line-height:2;white-space:pre-wrap}
 <button class="add" onclick="addFinding()">افزودن یافته</button>
 
 <div id="findingList"></div>
+</div>
+
+<div class="finding-card hidden" id="ureterStoneCard">
+<h3>سنگ حالب</h3>
+
+<label>سمت</label>
+<select id="usSide">
+<option value="راست">راست</option>
+<option value="چپ">چپ</option>
+</select>
+
+<label>محل سنگ</label>
+<select id="usLocation" onchange="updateUreterStoneDistanceFields()">
+<option value="UPJ">UPJ</option>
+<option value="یک‌سوم پروگزیمال حالب">یک‌سوم پروگزیمال حالب</option>
+<option value="یک‌سوم میانی حالب">یک‌سوم میانی حالب</option>
+<option value="یک‌سوم دیستال حالب">یک‌سوم دیستال حالب</option>
+<option value="UVJ">UVJ</option>
+</select>
+
+<div id="distanceFromUPJBox" class="hidden">
+<label>فاصله از UPJ</label>
+<input id="usDistanceFromUPJ" placeholder="mm">
+</div>
+
+<div id="distanceFromUVJBox" class="hidden">
+<label>فاصله از UVJ</label>
+<input id="usDistanceFromUVJ" placeholder="mm">
+</div>
+
+<label>اندازه سنگ</label>
+<input id="usStoneSize" placeholder="mm">
+
+<label>درجه هیدرونفروز / هیدرواورترونفروز</label>
+<select id="usHydronephrosis" onchange="updateHydronephrosisFields()">
+<option value="ندارد">ندارد</option>
+<option value="خفیف">خفیف</option>
+<option value="متوسط">متوسط</option>
+<option value="شدید">شدید</option>
+</select>
+
+<div id="apPelvisBox" class="hidden">
+<label>قطر AP لگنچه</label>
+<input id="usAPPelvisDiameter" placeholder="mm">
+</div>
+
+<label>هیدرواورتر</label>
+<select id="usHydroureter">
+<option value="دارد">دارد</option>
+<option value="ندارد">ندارد</option>
+</select>
+
+<label>جت ادراری</label>
+<select id="usUrinaryJet">
+<option value="دیده شد">دیده شد</option>
+<option value="دیده نشد">دیده نشد</option>
+</select>
+
+<button class="clear" onclick="removeFinding('ureterStone')">حذف</button>
 </div>
 
 <div class="finding-card hidden" id="fattyLiverCard">
@@ -186,12 +246,15 @@ textarea{min-height:610px;line-height:2;white-space:pre-wrap}
 </div>
 </div>
 
-<div class="footer">Version 0.5 — HN Finding Bank</div>
+<div class="footer">Version 0.6 — Ureter Stone Knowledge Engine</div>
 </div>
+
+<script src="findings.js"></script>
 
 <script>
 let currentGender="male";
 let findings={
+ureterStone:false,
 fattyLiver:false,
 appendicitis:false,
 bph:false,
@@ -233,6 +296,7 @@ renderFindings();
 
 function renderFindings(){
 const labels={
+ureterStone:"سنگ حالب",
 fattyLiver:"کبد چرب گرید I",
 appendicitis:"آپاندیسیت حاد",
 bph:"BPH",
@@ -250,6 +314,34 @@ Object.keys(findings).forEach(f=>{
 if(findings[f])html+="<div class='badge'>"+labels[f]+"</div> ";
 });
 document.getElementById("findingList").innerHTML=html || "<div style='color:#6b7280;margin-top:10px'>هنوز یافته‌ای اضافه نشده است.</div>";
+
+updateUreterStoneDistanceFields();
+updateHydronephrosisFields();
+}
+
+function updateUreterStoneDistanceFields(){
+const loc=document.getElementById("usLocation")?.value;
+document.getElementById("distanceFromUPJBox").classList.toggle("hidden",loc!=="یک‌سوم پروگزیمال حالب");
+document.getElementById("distanceFromUVJBox").classList.toggle("hidden",loc!=="یک‌سوم دیستال حالب");
+}
+
+function updateHydronephrosisFields(){
+const h=document.getElementById("usHydronephrosis")?.value;
+document.getElementById("apPelvisBox").classList.toggle("hidden",h==="ندارد");
+}
+
+function getUreterStoneData(){
+return{
+side:v("usSide"),
+location:v("usLocation"),
+stoneSize:v("usStoneSize"),
+distanceFromUPJ:v("usDistanceFromUPJ"),
+distanceFromUVJ:v("usDistanceFromUVJ"),
+hydronephrosis:v("usHydronephrosis"),
+apPelvisDiameter:v("usAPPelvisDiameter"),
+hydroureter:v("usHydroureter"),
+urinaryJet:v("usUrinaryJet")
+};
 }
 
 function generateAbdomenReport(){
@@ -270,7 +362,16 @@ report+="کیسه صفرا از نظر اندازه، ضخامت جدار و م�
 report+="طحال از نظر اندازه و اکوپترن طبیعی است.\n\n";
 report+="پانکراس از نظر اندازه و اکوپترن طبیعی است.\n\n";
 
+if(findings.ureterStone){
+let usData=getUreterStoneData();
+let sideText=usData.side;
+let oppositeSide=sideText==="راست"?"چپ":"راست";
+
+report+="کلیه "+sideText+" به قطر طولی "+(sideText==="راست"?v("rkLength"):v("lkLength"))+" میلی‌متر و ضخامت پارانشیم "+(sideText==="راست"?v("rkParenchyma"):v("lkParenchyma"))+" میلی‌متر و کلیه "+oppositeSide+" به قطر طولی "+(oppositeSide==="راست"?v("rkLength"):v("lkLength"))+" میلی‌متر و ضخامت پارانشیم "+(oppositeSide==="راست"?v("rkParenchyma"):v("lkParenchyma"))+" میلی‌متر اندازه‌گیری شدند. اکوی پارانشیم هر دو کلیه طبیعی بوده و افتراق کورتیکومدولاری حفظ شده است.\n\n";
+report+=FINDING_BANK.ureterStone.generateFindingText(usData)+"\n\n";
+}else{
 report+="کلیه راست به قطر طولی "+v("rkLength")+" میلی‌متر و ضخامت پارانشیم "+v("rkParenchyma")+" میلی‌متر و کلیه چپ به قطر طولی "+v("lkLength")+" میلی‌متر و ضخامت پارانشیم "+v("lkParenchyma")+" میلی‌متر اندازه‌گیری شدند. اکوی پارانشیم هر دو کلیه طبیعی بوده و افتراق کورتیکومدولاری حفظ شده است. شواهدی از هیدرونفروز یا سنگ قابل مشاهده در کلیه‌ها رویت نشد.\n\n";
+}
 
 if(findings.bladderWall&&findings.bladderDebris){
 report+="مثانه دارای ضخامت جدار مختصراً افزایش یافته، حدود "+v("bladderWallThickness")+" میلی‌متر است. چند دبری اکوژن مختصر شناور در داخل مثانه رویت شد که می‌تواند در زمینه هماتوری، پیوری یا کریستالوری باشد. در صورت صلاحدید بالینی، تطبیق با یافته‌های UA و UC توصیه می‌شود.\n\n";
@@ -301,6 +402,7 @@ report+="مایع آزاد در حفره صفاقی مشاهده نشد.\n\n";
 report+="نتیجه‌گیری:\n\n";
 
 let imp=[];
+if(findings.ureterStone)imp.push(FINDING_BANK.ureterStone.generateImpression(getUreterStoneData()));
 if(findings.appendicitis)imp.push("شواهد سونوگرافیک به نفع آپاندیسیت حاد با قطر حدود "+v("appendixDiameter")+" میلی‌متر و التهاب چربی اطراف، بدون شواهد collection یا perforation در حد قابل ارزیابی");
 if(findings.fattyLiver)imp.push("کبد چرب گرید I");
 if(currentGender==="male"&&findings.bph)imp.push("بزرگی پروستات با حجم تقریبی "+v("prostateVolume")+" سی‌سی به نفع BPH");

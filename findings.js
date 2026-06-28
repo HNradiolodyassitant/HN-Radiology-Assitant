@@ -110,5 +110,95 @@ const FINDING_BANK = {
         return text;
       }
     }
+  },
+
+  prostateEngine: {
+    id: "HN-US-003",
+    title: "ارزیابی پروستات",
+    category: "Prostate",
+
+    calculateVolume: function(ml, ap, cc) {
+      let volume = (Number(ml) * Number(ap) * Number(cc) * 0.52) / 1000;
+      return Math.round(volume);
+    },
+
+    generateFindingText: function(data) {
+      let texts = [];
+
+      if (data.mode === "normal") {
+        return "پروستات از نظر ابعاد و اکوپترن طبیعی است.";
+      }
+
+      let volumeText = "";
+      if (data.includeVolume === "بله") {
+        let volume = this.calculateVolume(data.ml, data.ap, data.cc);
+        volumeText = " با حجم تقریبی " + volume + " سی‌سی";
+      }
+
+      if (data.mode === "enlargement") {
+        let text = "پروستات" + volumeText + " بزرگ‌تر از حد طبیعی بوده، حدود آن صاف و منظم است";
+
+        if (data.transitionZone === "بزرگ شده") {
+          text += " و بزرگ‌شدگی Transition zone مشاهده می‌شود";
+        }
+
+        text += ".";
+
+        texts.push(text);
+      }
+
+      if (data.medianLobe === "دارد") {
+        texts.push("برجستگی Median lobe به میزان " + data.medianLobeSize + " میلی‌متر به داخل مثانه مشاهده شد.");
+      }
+
+      if (data.calcification === "دارد") {
+        texts.push("کلسیفیکاسیون " + data.calcificationType + " در " + data.calcificationLocation + " پروستات رویت شد.");
+      }
+
+      if (data.prostatitisPattern === "حاد") {
+        texts.push("هتروژنی اکوتکچر پروستات در صورت تطابق بالینی می‌تواند مطرح‌کننده پروستاتیت باشد.");
+      }
+
+      if (data.prostatitisPattern === "مزمن") {
+        texts.push("کلسیفیکاسیون‌های coarse متعدد پروستات در صورت تطابق بالینی می‌تواند در زمینه پروستاتیت مزمن باشد.");
+      }
+
+      return texts.join(" ");
+    },
+
+    generateImpression: function(data) {
+      let impressions = [];
+
+      if (data.mode === "enlargement") {
+        let volume = this.calculateVolume(data.ml, data.ap, data.cc);
+        let text = "بزرگی خوش‌خیم‌نمای پروستات";
+
+        if (data.includeVolume === "بله") {
+          text += " با حجم تقریبی " + volume + " سی‌سی";
+        }
+
+        if (data.transitionZone === "بزرگ شده") {
+          text += " و بزرگ‌شدگی Transition zone";
+        }
+
+        text += " که در صورت تطابق بالینی می‌تواند در زمینه بزرگی خوش‌خیم پروستات باشد";
+
+        impressions.push(text);
+      }
+
+      if (data.medianLobe === "دارد") {
+        impressions.push("برجستگی Median lobe به داخل مثانه");
+      }
+
+      if (data.prostatitisPattern === "حاد") {
+        impressions.push("در صورت تطابق بالینی، یافته‌ها می‌تواند مطرح‌کننده پروستاتیت باشد");
+      }
+
+      if (data.prostatitisPattern === "مزمن") {
+        impressions.push("کلسیفیکاسیون‌های coarse متعدد پروستات که در صورت تطابق بالینی می‌تواند در زمینه پروستاتیت مزمن باشد");
+      }
+
+      return impressions.join(". ");
+    }
   }
 };

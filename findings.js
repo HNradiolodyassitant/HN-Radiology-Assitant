@@ -51,17 +51,23 @@ const FINDING_BANK = {
     title: "سنگ کلیه",
     category: "Kidney",
 
+    sideText: function(side) {
+      return side === "دوطرفه" ? "هر دو کلیه" : "کلیه " + side;
+    },
+
     generateFindingText: function(data) {
+      let kidneyText = this.sideText(data.side);
+
       let hydroText = "";
 
       if (data.hydronephrosis !== "ندارد") {
-        hydroText = " که با هیدرونفروز " + data.hydronephrosis + " همراه است. قطر AP لگنچه کلیه " + data.side + " " + data.apPelvisDiameter + " میلی‌متر اندازه‌گیری شد.";
+        hydroText = " که با هیدرونفروز " + data.hydronephrosis + " همراه است. قطر AP لگنچه " + kidneyText + " " + data.apPelvisDiameter + " میلی‌متر اندازه‌گیری شد.";
       } else {
         hydroText = ". شواهدی از هیدرونفروز مشاهده نشد.";
       }
 
       if (data.mode === "single") {
-        return "سنگ به قطر " + data.singleSize + " میلی‌متر در " + data.singleLocation + " کلیه " + data.side + " رویت شد" + hydroText;
+        return "سنگ به قطر " + data.singleSize + " میلی‌متر در " + data.singleLocation + " " + kidneyText + " رویت شد" + hydroText;
       }
 
       if (data.mode === "multiple") {
@@ -72,32 +78,34 @@ const FINDING_BANK = {
         if (data.lowerSize) parts.push("در کالیس تحتانی تا قطر " + data.lowerSize + " میلی‌متر");
         if (data.pelvisSize) parts.push("در لگنچه تا قطر " + data.pelvisSize + " میلی‌متر");
 
-        return "تصویر حداقل " + data.count + " سنگ در کلیه " + data.side + " رویت شد که بزرگ‌ترین آن‌ها " + parts.join("، ") + " قرار دارند" + hydroText;
+        return "تصویر حداقل " + data.count + " سنگ در " + kidneyText + " رویت شد که بزرگ‌ترین آن‌ها " + parts.join("، ") + " قرار دارند" + hydroText;
       }
 
       if (data.mode === "staghorn") {
         let locations = data.staghornLocations.join("، ");
         let pelvisText = data.staghornLocations.includes("لگنچه") ? " با گسترش به لگنچه" : "";
 
-        return "سنگ‌های متعدد با نمای شاخ‌گوزنی در " + locations + " کلیه " + data.side + pelvisText + "، با قطر تجمعی " + data.totalSize + " میلی‌متر رویت شد" + hydroText;
+        return "سنگ‌های متعدد با نمای شاخ‌گوزنی در " + locations + " " + kidneyText + pelvisText + "، با قطر تجمعی " + data.totalSize + " میلی‌متر رویت شد" + hydroText;
       }
     },
 
     generateImpression: function(data) {
+      let kidneyText = this.sideText(data.side);
+
       if (data.mode === "single") {
-        let text = "سنگ " + data.singleSize + " میلی‌متری در " + data.singleLocation + " کلیه " + data.side;
+        let text = "سنگ " + data.singleSize + " میلی‌متری در " + data.singleLocation + " " + kidneyText;
         if (data.hydronephrosis !== "ندارد") text += " همراه با هیدرونفروز " + data.hydronephrosis;
         return text;
       }
 
       if (data.mode === "multiple") {
-        let text = "سنگ‌های متعدد کلیه " + data.side;
+        let text = "سنگ‌های متعدد در " + kidneyText;
         if (data.hydronephrosis !== "ندارد") text += " همراه با هیدرونفروز " + data.hydronephrosis;
         return text;
       }
 
       if (data.mode === "staghorn") {
-        let text = "سنگ‌های متعدد با نمای شاخ‌گوزنی در کلیه " + data.side + " با قطر تجمعی " + data.totalSize + " میلی‌متر";
+        let text = "سنگ‌های متعدد با نمای شاخ‌گوزنی در " + kidneyText + " با قطر تجمعی " + data.totalSize + " میلی‌متر";
         if (data.hydronephrosis !== "ندارد") text += " همراه با هیدرونفروز " + data.hydronephrosis;
         return text;
       }

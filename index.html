@@ -128,9 +128,10 @@ textarea{min-height:660px;line-height:2;white-space:pre-wrap}
 <option value="">انتخاب یافته...</option>
 <option value="ureterStone">سنگ حالب</option>
 <option value="renalStone">سنگ کلیه</option>
+<option value="prostateEngine">ارزیابی پروستات</option>
 <option value="fattyLiver">کبد چرب گرید I</option>
 <option value="appendicitis">آپاندیسیت حاد</option>
-<option value="bph">BPH</option>
+<option value="bph">BPH قدیمی</option>
 <option value="bladderWall">افزایش ضخامت جدار مثانه</option>
 <option value="bladderDebris">دبری اکوژن مختصر شناور در مثانه</option>
 </select>
@@ -213,7 +214,6 @@ textarea{min-height:660px;line-height:2;white-space:pre-wrap}
 <option value="راست">راست</option>
 <option value="چپ">چپ</option>
 <option value="دوطرفه">دوطرفه</option>
-
 </select>
 
 <div id="rsSingleBox">
@@ -276,6 +276,69 @@ textarea{min-height:660px;line-height:2;white-space:pre-wrap}
 <button class="clear" onclick="removeFinding('renalStone')">حذف</button>
 </div>
 
+<div class="finding-card hidden" id="prostateEngineCard">
+<h3>ارزیابی پروستات</h3>
+
+<label>حالت گزارش</label>
+<select id="prMode">
+<option value="normal">طبیعی</option>
+<option value="enlargement">بزرگی خوش‌خیم‌نما</option>
+</select>
+
+<div class="row">
+<div><label>Mediolateral</label><input id="prML" placeholder="mm"></div>
+<div><label>Anteroposterior</label><input id="prAP" placeholder="mm"></div>
+</div>
+
+<label>Craniocaudal</label>
+<input id="prCC" placeholder="mm">
+
+<label>حجم در گزارش ذکر شود؟</label>
+<select id="prIncludeVolume">
+<option value="خیر">خیر</option>
+<option value="بله">بله</option>
+</select>
+
+<label>Transition zone</label>
+<select id="prTransitionZone">
+<option value="طبیعی">طبیعی</option>
+<option value="بزرگ شده">بزرگ شده</option>
+</select>
+
+<label>Median lobe</label>
+<select id="prMedianLobe">
+<option value="ندارد">ندارد</option>
+<option value="دارد">دارد</option>
+</select>
+
+<label>برجستگی Median lobe به داخل مثانه</label>
+<input id="prMedianLobeSize" placeholder="mm">
+
+<label>کلسیفیکاسیون</label>
+<select id="prCalcification">
+<option value="ندارد">ندارد</option>
+<option value="دارد">دارد</option>
+</select>
+
+<label>نوع کلسیفیکاسیون</label>
+<select id="prCalcificationType">
+<option value="coarse">coarse</option>
+<option value="fine">fine</option>
+</select>
+
+<label>محل کلسیفیکاسیون</label>
+<input id="prCalcificationLocation" placeholder="مثلاً پارانشیم لوب راست">
+
+<label>الگوی پروستاتیت</label>
+<select id="prProstatitisPattern">
+<option value="ندارد">ندارد</option>
+<option value="حاد">مطرح‌کننده پروستاتیت</option>
+<option value="مزمن">مطرح‌کننده پروستاتیت مزمن</option>
+</select>
+
+<button class="clear" onclick="removeFinding('prostateEngine')">حذف</button>
+</div>
+
 <div class="finding-card hidden" id="fattyLiverCard">
 <h3>کبد چرب گرید I</h3>
 <button class="clear" onclick="removeFinding('fattyLiver')">حذف</button>
@@ -289,7 +352,7 @@ textarea{min-height:660px;line-height:2;white-space:pre-wrap}
 </div>
 
 <div class="finding-card hidden" id="bphCard">
-<h3>BPH</h3>
+<h3>BPH قدیمی</h3>
 <label>حجم پروستات</label>
 <input id="prostateVolume" placeholder="cc">
 <button class="clear" onclick="removeFinding('bph')">حذف</button>
@@ -325,7 +388,7 @@ textarea{min-height:660px;line-height:2;white-space:pre-wrap}
 </div>
 </div>
 
-<div class="footer">Version 0.7 — Renal Stone Finding Added</div>
+<div class="footer">Version 0.8 — Prostate Engine Added</div>
 </div>
 
 <script src="findings.js"></script>
@@ -335,6 +398,7 @@ let currentGender="male";
 let findings={
 ureterStone:false,
 renalStone:false,
+prostateEngine:false,
 fattyLiver:false,
 appendicitis:false,
 bph:false,
@@ -352,7 +416,7 @@ currentGender=g;
 document.getElementById("maleBtn").classList.toggle("active",g==="male");
 document.getElementById("femaleBtn").classList.toggle("active",g==="female");
 document.getElementById("femaleFields").style.display=g==="female"?"block":"none";
-if(g==="female"){removeFinding("bph")}
+if(g==="female"){removeFinding("bph");removeFinding("prostateEngine")}
 }
 
 function v(id,fallback="..."){
@@ -363,7 +427,9 @@ return el&&el.value.trim()?el.value.trim():fallback;
 function addFinding(){
 const f=document.getElementById("findingSelect").value;
 if(!f)return;
-if(f==="bph"&&currentGender==="female"){alert("BPH فقط برای آقا فعال است.");return;}
+if((f==="bph"||f==="prostateEngine")&&currentGender==="female"){alert("یافته پروستات فقط برای آقا فعال است.");return;}
+if(f==="prostateEngine")findings.bph=false;
+if(f==="bph")findings.prostateEngine=false;
 findings[f]=true;
 renderFindings();
 document.getElementById("findingSelect").value="";
@@ -378,9 +444,10 @@ function renderFindings(){
 const labels={
 ureterStone:"سنگ حالب",
 renalStone:"سنگ کلیه",
+prostateEngine:"ارزیابی پروستات",
 fattyLiver:"کبد چرب گرید I",
 appendicitis:"آپاندیسیت حاد",
-bph:"BPH",
+bph:"BPH قدیمی",
 bladderWall:"افزایش ضخامت جدار مثانه",
 bladderDebris:"دبری اکوژن مختصر شناور در مثانه"
 };
@@ -463,6 +530,23 @@ apPelvisDiameter:v("rsAPPelvisDiameter")
 };
 }
 
+function getProstateData(){
+return{
+mode:v("prMode"),
+ml:v("prML"),
+ap:v("prAP"),
+cc:v("prCC"),
+includeVolume:v("prIncludeVolume"),
+transitionZone:v("prTransitionZone"),
+medianLobe:v("prMedianLobe"),
+medianLobeSize:v("prMedianLobeSize"),
+calcification:v("prCalcification"),
+calcificationType:v("prCalcificationType"),
+calcificationLocation:v("prCalcificationLocation"),
+prostatitisPattern:v("prProstatitisPattern")
+};
+}
+
 function generateAbdomenReport(){
 let report="";
 let indication=v("indication","");
@@ -500,10 +584,12 @@ report+="مثانه دارای ضخامت جدار و محتویات طبیعی 
 }
 
 if(currentGender==="male"){
-if(findings.bph){
+if(findings.prostateEngine){
+report+=FINDING_BANK.prostateEngine.generateFindingText(getProstateData())+"\n\n";
+}else if(findings.bph){
 report+="پروستات با حجم تقریبی "+v("prostateVolume")+" سی‌سی بزرگ‌تر از حد طبیعی بوده و نمای آن به نفع BPH است.\n\n";
 }else{
-report+="پروستات از نظر اندازه و اکوپترن طبیعی است.\n\n";
+report+="پروستات از نظر ابعاد و اکوپترن طبیعی است.\n\n";
 }
 }else{
 report+="رحم از نظر اندازه و اکوپترن طبیعی است. ضخامت آندومتر "+v("endometriumThickness")+" میلی‌متر است. تخمدان‌های دو طرف از نظر اندازه و اکوپترن طبیعی بوده و ضایعه آدنکسال مشاهده نشد.\n\n";
@@ -520,6 +606,10 @@ report+="نتیجه‌گیری:\n\n";
 let imp=[];
 if(findings.renalStone)imp.push(FINDING_BANK.renalStone.generateImpression(getRenalStoneData()));
 if(findings.ureterStone)imp.push(FINDING_BANK.ureterStone.generateImpression(getUreterStoneData()));
+if(currentGender==="male"&&findings.prostateEngine){
+let prImp=FINDING_BANK.prostateEngine.generateImpression(getProstateData());
+if(prImp)imp.push(prImp);
+}
 if(findings.appendicitis)imp.push("شواهد سونوگرافیک به نفع آپاندیسیت حاد با قطر حدود "+v("appendixDiameter")+" میلی‌متر و التهاب چربی اطراف، بدون شواهد collection یا perforation در حد قابل ارزیابی");
 if(findings.fattyLiver)imp.push("کبد چرب گرید I");
 if(currentGender==="male"&&findings.bph)imp.push("بزرگی پروستات با حجم تقریبی "+v("prostateVolume")+" سی‌سی به نفع BPH");

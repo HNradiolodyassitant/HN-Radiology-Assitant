@@ -1,1 +1,618 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HN Radiology Assistant</title>
+<link rel="stylesheet" href="style.css">
+</head>
 
+<body>
+<div class="page">
+
+<div class="header">
+<h1>HN Radiology Assistant</h1>
+<p>Designed by a Radiologist, Built for Radiologists</p>
+</div>
+
+<div id="home" class="section" style="display:block;">
+<div class="grid">
+<div class="card" onclick="showSection('ultrasoundMenu')"><div class="icon">🩻</div><div class="title">Ultrasound</div><div class="subtitle">گزارش‌های سونوگرافی</div></div>
+<div class="card"><div class="icon">🧠</div><div class="title">MRI</div><div class="subtitle">در نسخه‌های بعدی</div></div>
+<div class="card"><div class="icon">🎗️</div><div class="title">Mammography</div><div class="subtitle">در نسخه‌های بعدی</div></div>
+<div class="card"><div class="icon">🦴</div><div class="title">X-Ray</div><div class="subtitle">در نسخه‌های بعدی</div></div>
+<div class="card"><div class="icon">📚</div><div class="title">Sentence Library</div><div class="subtitle">بانک جملات اختصاصی</div></div>
+<div class="card"><div class="icon">⚙️</div><div class="title">Settings</div><div class="subtitle">تنظیمات</div></div>
+</div>
+</div>
+
+<div id="ultrasoundMenu" class="section">
+<div class="toolbar"><button class="back" onclick="showSection('home')">بازگشت</button></div>
+<div class="grid">
+<div class="card" onclick="showSection('abdomenPelvis')"><div class="icon">🩻</div><div class="title">Abdomen & Pelvis</div><div class="subtitle">شکم و لگن</div></div>
+<div class="card"><div class="icon">🫘</div><div class="title">Kidney & Urinary Tract</div><div class="subtitle">در مرحله بعد</div></div>
+<div class="card"><div class="icon">🦋</div><div class="title">Thyroid</div><div class="subtitle">در مرحله بعد</div></div>
+<div class="card"><div class="icon">🟣</div><div class="title">Soft Tissue</div><div class="subtitle">در مرحله بعد</div></div>
+<div class="card"><div class="icon">🔴</div><div class="title">Venous Doppler</div><div class="subtitle">در مرحله بعد</div></div>
+<div class="card"><div class="icon">👶</div><div class="title">OB</div><div class="subtitle">در مرحله بعد</div></div>
+</div>
+</div>
+
+<div id="abdomenPelvis" class="section">
+<div class="toolbar">
+<button class="back" onclick="showSection('ultrasoundMenu')">بازگشت به سونوگرافی</button>
+<button class="primary" onclick="generateAbdomenReport()">تولید گزارش</button>
+<button class="copy" onclick="copyReport()">کپی گزارش</button>
+<button class="clear" onclick="clearForm()">پاک کردن</button>
+</div>
+
+<div class="form-grid">
+
+<div>
+
+<div class="panel">
+<span class="badge">Patient Information</span>
+<h2>اطلاعات بیمار</h2>
+
+<label>نام و نام خانوادگی</label>
+<input id="patientName" placeholder="مثلاً رضا حسینی">
+
+<label>سن</label>
+<input id="age" placeholder="مثلاً 30 سال">
+
+<label>جنسیت</label>
+<div class="gender-box">
+<button id="maleBtn" class="active" onclick="setGender('male')">آقا</button>
+<button id="femaleBtn" onclick="setGender('female')">خانم</button>
+</div>
+
+<label>اندیکاسیون / شرح حال</label>
+<select id="indication">
+<option value="">انتخاب نشده</option>
+<option value="درد RLQ">درد RLQ</option>
+<option value="درد شکم">درد شکم</option>
+<option value="درد فلانک">درد فلانک</option>
+<option value="هماچوری">هماچوری</option>
+<option value="علائم ادراری">علائم ادراری</option>
+<option value="چکاپ">چکاپ</option>
+</select>
+</div>
+
+<div class="panel">
+<span class="badge">Normal Measurements</span>
+<h2>کلیه‌ها</h2>
+<div class="row">
+<div><label>قطر طولی کلیه راست</label><input id="rkLength" placeholder="mm"></div>
+<div><label>ضخامت پارانشیم کلیه راست</label><input id="rkParenchyma" placeholder="mm"></div>
+</div>
+<div class="row">
+<div><label>قطر طولی کلیه چپ</label><input id="lkLength" placeholder="mm"></div>
+<div><label>ضخامت پارانشیم کلیه چپ</label><input id="lkParenchyma" placeholder="mm"></div>
+</div>
+</div>
+
+<div class="panel">
+<span class="badge">HN Finding Bank</span>
+<h2>بانک یافته‌های اختصاصی</h2>
+
+<label>افزودن یافته</label>
+<select id="findingSelect">
+<option value="">انتخاب یافته...</option>
+<option value="ureterStone">سنگ حالب</option>
+<option value="renalStone">سنگ کلیه</option>
+<option value="prostateEngine">ارزیابی پروستات</option>
+<option value="fattyLiver">کبد چرب گرید I</option>
+<option value="appendicitis">آپاندیسیت حاد</option>
+<option value="bph">BPH قدیمی</option>
+<option value="bladderWall">افزایش ضخامت جدار مثانه</option>
+<option value="bladderDebris">دبری اکوژن مختصر شناور در مثانه</option>
+</select>
+<button class="add" onclick="addFinding()">افزودن یافته</button>
+
+<div id="findingList"></div>
+</div>
+
+<div class="finding-card hidden" id="ureterStoneCard">
+<h3>سنگ حالب</h3>
+
+<label>سمت</label>
+<select id="usSide">
+<option value="راست">راست</option>
+<option value="چپ">چپ</option>
+</select>
+
+<label>محل سنگ</label>
+<select id="usLocation" onchange="updateUreterStoneDistanceFields()">
+<option value="UPJ">UPJ</option>
+<option value="یک‌سوم پروگزیمال حالب">یک‌سوم پروگزیمال حالب</option>
+<option value="یک‌سوم میانی حالب">یک‌سوم میانی حالب</option>
+<option value="یک‌سوم دیستال حالب">یک‌سوم دیستال حالب</option>
+<option value="UVJ">UVJ</option>
+</select>
+
+<div id="distanceFromUPJBox" class="hidden">
+<label>فاصله از UPJ</label>
+<input id="usDistanceFromUPJ" placeholder="mm">
+</div>
+
+<div id="distanceFromUVJBox" class="hidden">
+<label>فاصله از UVJ</label>
+<input id="usDistanceFromUVJ" placeholder="mm">
+</div>
+
+<label>اندازه سنگ</label>
+<input id="usStoneSize" placeholder="mm">
+
+<label>درجه هیدرونفروز / هیدرواورترونفروز</label>
+<select id="usHydronephrosis" onchange="updateHydronephrosisFields()">
+<option value="ندارد">ندارد</option>
+<option value="خفیف">خفیف</option>
+<option value="متوسط">متوسط</option>
+<option value="شدید">شدید</option>
+</select>
+
+<div id="apPelvisBox" class="hidden">
+<label>قطر AP لگنچه</label>
+<input id="usAPPelvisDiameter" placeholder="mm">
+</div>
+
+<label>هیدرواورتر</label>
+<select id="usHydroureter">
+<option value="دارد">دارد</option>
+<option value="ندارد">ندارد</option>
+</select>
+
+<label>جت ادراری</label>
+<select id="usUrinaryJet">
+<option value="دیده شد">دیده شد</option>
+<option value="دیده نشد">دیده نشد</option>
+</select>
+
+<button class="clear" onclick="removeFinding('ureterStone')">حذف</button>
+</div>
+
+<div class="finding-card hidden" id="renalStoneCard">
+<h3>سنگ کلیه</h3>
+
+<label>نوع سنگ کلیه</label>
+<select id="rsMode" onchange="updateRenalStoneMode()">
+<option value="single">سنگ منفرد</option>
+<option value="multiple">سنگ‌های متعدد</option>
+<option value="staghorn">سنگ شاخ‌گوزنی</option>
+</select>
+
+<label>سمت</label>
+<select id="rsSide">
+<option value="راست">راست</option>
+<option value="چپ">چپ</option>
+<option value="دوطرفه">دوطرفه</option>
+</select>
+
+<div id="rsSingleBox">
+<label>محل سنگ</label>
+<select id="rsSingleLocation">
+<option value="کالیس فوقانی">کالیس فوقانی</option>
+<option value="کالیس میانی فوقانی">کالیس میانی فوقانی</option>
+<option value="کالیس میانی">کالیس میانی</option>
+<option value="کالیس میانی تحتانی">کالیس میانی تحتانی</option>
+<option value="کالیس تحتانی">کالیس تحتانی</option>
+<option value="لگنچه">لگنچه</option>
+</select>
+
+<label>اندازه سنگ</label>
+<input id="rsSingleSize" placeholder="mm">
+</div>
+
+<div id="rsMultipleBox" class="hidden">
+<label>حداقل تعداد سنگ‌ها</label>
+<input id="rsCount" placeholder="مثلاً 3">
+
+<div class="row">
+<div><label>بزرگ‌ترین سنگ کالیس فوقانی</label><input id="rsUpperSize" placeholder="mm"></div>
+<div><label>بزرگ‌ترین سنگ کالیس میانی</label><input id="rsMidSize" placeholder="mm"></div>
+</div>
+<div class="row">
+<div><label>بزرگ‌ترین سنگ کالیس تحتانی</label><input id="rsLowerSize" placeholder="mm"></div>
+<div><label>بزرگ‌ترین سنگ لگنچه</label><input id="rsPelvisSize" placeholder="mm"></div>
+</div>
+</div>
+
+<div id="rsStaghornBox" class="hidden">
+<label>کالیس‌ها / نواحی درگیر</label>
+<div class="row">
+<label><input type="checkbox" id="rsStaghornUpper"> کالیس فوقانی</label>
+<label><input type="checkbox" id="rsStaghornMid"> کالیس میانی</label>
+</div>
+<div class="row">
+<label><input type="checkbox" id="rsStaghornLower"> کالیس تحتانی</label>
+<label><input type="checkbox" id="rsStaghornPelvis"> لگنچه</label>
+</div>
+
+<label>قطر تجمعی سنگ</label>
+<input id="rsTotalSize" placeholder="mm">
+</div>
+
+<label>هیدرونفروز</label>
+<select id="rsHydronephrosis" onchange="updateRenalStoneHydroFields()">
+<option value="ندارد">ندارد</option>
+<option value="خفیف">خفیف</option>
+<option value="متوسط">متوسط</option>
+<option value="شدید">شدید</option>
+</select>
+
+<div id="rsAPPelvisBox" class="hidden">
+<label>قطر AP لگنچه</label>
+<input id="rsAPPelvisDiameter" placeholder="mm">
+</div>
+
+<button class="clear" onclick="removeFinding('renalStone')">حذف</button>
+</div>
+
+<div class="finding-card hidden" id="prostateEngineCard">
+<h3>ارزیابی پروستات</h3>
+
+<label>حالت گزارش</label>
+<select id="prMode">
+<option value="normal">طبیعی</option>
+<option value="enlargement">بزرگی خوش‌خیم‌نما</option>
+</select>
+
+<div class="row">
+<div><label>Mediolateral</label><input id="prML" placeholder="mm"></div>
+<div><label>Anteroposterior</label><input id="prAP" placeholder="mm"></div>
+</div>
+
+<label>Craniocaudal</label>
+<input id="prCC" placeholder="mm">
+
+<label>حجم در گزارش ذکر شود؟</label>
+<select id="prIncludeVolume">
+<option value="خیر">خیر</option>
+<option value="بله">بله</option>
+</select>
+
+<label>Transition zone</label>
+<select id="prTransitionZone">
+<option value="طبیعی">طبیعی</option>
+<option value="بزرگ شده">بزرگ شده</option>
+</select>
+
+<label>Median lobe</label>
+<select id="prMedianLobe">
+<option value="ندارد">ندارد</option>
+<option value="دارد">دارد</option>
+</select>
+
+<label>برجستگی Median lobe به داخل مثانه</label>
+<input id="prMedianLobeSize" placeholder="mm">
+
+<label>کلسیفیکاسیون</label>
+<select id="prCalcification">
+<option value="ندارد">ندارد</option>
+<option value="دارد">دارد</option>
+</select>
+
+<label>نوع کلسیفیکاسیون</label>
+<select id="prCalcificationType">
+<option value="coarse">coarse</option>
+<option value="fine">fine</option>
+</select>
+
+<label>محل کلسیفیکاسیون</label>
+<input id="prCalcificationLocation" placeholder="مثلاً پارانشیم لوب راست">
+
+<label>الگوی پروستاتیت</label>
+<select id="prProstatitisPattern">
+<option value="ندارد">ندارد</option>
+<option value="حاد">مطرح‌کننده پروستاتیت</option>
+<option value="مزمن">مطرح‌کننده پروستاتیت مزمن</option>
+</select>
+
+<button class="clear" onclick="removeFinding('prostateEngine')">حذف</button>
+</div>
+
+<div class="finding-card hidden" id="fattyLiverCard">
+<h3>کبد چرب گرید I</h3>
+<button class="clear" onclick="removeFinding('fattyLiver')">حذف</button>
+</div>
+
+<div class="finding-card hidden" id="appendicitisCard">
+<h3>آپاندیسیت حاد</h3>
+<label>قطر آپاندیس</label>
+<input id="appendixDiameter" placeholder="mm">
+<button class="clear" onclick="removeFinding('appendicitis')">حذف</button>
+</div>
+
+<div class="finding-card hidden" id="bphCard">
+<h3>BPH قدیمی</h3>
+<label>حجم پروستات</label>
+<input id="prostateVolume" placeholder="cc">
+<button class="clear" onclick="removeFinding('bph')">حذف</button>
+</div>
+
+<div class="finding-card hidden" id="bladderWallCard">
+<h3>افزایش ضخامت جدار مثانه</h3>
+<label>ضخامت جدار مثانه</label>
+<input id="bladderWallThickness" placeholder="mm">
+<button class="clear" onclick="removeFinding('bladderWall')">حذف</button>
+</div>
+
+<div class="finding-card hidden" id="bladderDebrisCard">
+<h3>دبری اکوژن مختصر شناور در مثانه</h3>
+<button class="clear" onclick="removeFinding('bladderDebris')">حذف</button>
+</div>
+
+<div class="panel" id="femaleFields" style="display:none;">
+<span class="badge">Female Pelvis</span>
+<h2>لگن خانم</h2>
+<label>ضخامت آندومتر</label>
+<input id="endometriumThickness" placeholder="mm">
+</div>
+
+</div>
+
+<div class="panel">
+<span class="badge">Final Report</span>
+<h2>گزارش نهایی</h2>
+<textarea id="report" readonly></textarea>
+</div>
+
+</div>
+</div>
+
+<div class="footer">Version 0.8 — Prostate Engine Added</div>
+</div>
+
+<script src="findings.js"></script>
+
+<script>
+let currentGender="male";
+let findings={
+ureterStone:false,
+renalStone:false,
+prostateEngine:false,
+fattyLiver:false,
+appendicitis:false,
+bph:false,
+bladderWall:false,
+bladderDebris:false
+};
+
+function showSection(id){
+document.querySelectorAll(".section").forEach(s=>s.style.display="none");
+document.getElementById(id).style.display="block";
+}
+
+function setGender(g){
+currentGender=g;
+document.getElementById("maleBtn").classList.toggle("active",g==="male");
+document.getElementById("femaleBtn").classList.toggle("active",g==="female");
+document.getElementById("femaleFields").style.display=g==="female"?"block":"none";
+if(g==="female"){removeFinding("bph");removeFinding("prostateEngine")}
+}
+
+function v(id,fallback="..."){
+const el=document.getElementById(id);
+return el&&el.value.trim()?el.value.trim():fallback;
+}
+
+function addFinding(){
+const f=document.getElementById("findingSelect").value;
+if(!f)return;
+if((f==="bph"||f==="prostateEngine")&&currentGender==="female"){alert("یافته پروستات فقط برای آقا فعال است.");return;}
+if(f==="prostateEngine")findings.bph=false;
+if(f==="bph")findings.prostateEngine=false;
+findings[f]=true;
+renderFindings();
+document.getElementById("findingSelect").value="";
+}
+
+function removeFinding(f){
+findings[f]=false;
+renderFindings();
+}
+
+function renderFindings(){
+const labels={
+ureterStone:"سنگ حالب",
+renalStone:"سنگ کلیه",
+prostateEngine:"ارزیابی پروستات",
+fattyLiver:"کبد چرب گرید I",
+appendicitis:"آپاندیسیت حاد",
+bph:"BPH قدیمی",
+bladderWall:"افزایش ضخامت جدار مثانه",
+bladderDebris:"دبری اکوژن مختصر شناور در مثانه"
+};
+
+Object.keys(findings).forEach(f=>{
+const card=document.getElementById(f+"Card");
+if(card)card.classList.toggle("hidden",!findings[f]);
+});
+
+let html="";
+Object.keys(findings).forEach(f=>{
+if(findings[f])html+="<div class='badge'>"+labels[f]+"</div> ";
+});
+document.getElementById("findingList").innerHTML=html || "<div style='color:#6b7280;margin-top:10px'>هنوز یافته‌ای اضافه نشده است.</div>";
+
+updateUreterStoneDistanceFields();
+updateHydronephrosisFields();
+updateRenalStoneMode();
+updateRenalStoneHydroFields();
+}
+
+function updateUreterStoneDistanceFields(){
+const loc=document.getElementById("usLocation")?.value;
+document.getElementById("distanceFromUPJBox").classList.toggle("hidden",loc!=="یک‌سوم پروگزیمال حالب");
+document.getElementById("distanceFromUVJBox").classList.toggle("hidden",loc!=="یک‌سوم دیستال حالب");
+}
+
+function updateHydronephrosisFields(){
+const h=document.getElementById("usHydronephrosis")?.value;
+document.getElementById("apPelvisBox").classList.toggle("hidden",h==="ندارد");
+}
+
+function updateRenalStoneMode(){
+const mode=document.getElementById("rsMode")?.value;
+document.getElementById("rsSingleBox").classList.toggle("hidden",mode!=="single");
+document.getElementById("rsMultipleBox").classList.toggle("hidden",mode!=="multiple");
+document.getElementById("rsStaghornBox").classList.toggle("hidden",mode!=="staghorn");
+}
+
+function updateRenalStoneHydroFields(){
+const h=document.getElementById("rsHydronephrosis")?.value;
+document.getElementById("rsAPPelvisBox").classList.toggle("hidden",h==="ندارد");
+}
+
+function getUreterStoneData(){
+return{
+side:v("usSide"),
+location:v("usLocation"),
+stoneSize:v("usStoneSize"),
+distanceFromUPJ:v("usDistanceFromUPJ"),
+distanceFromUVJ:v("usDistanceFromUVJ"),
+hydronephrosis:v("usHydronephrosis"),
+apPelvisDiameter:v("usAPPelvisDiameter"),
+hydroureter:v("usHydroureter"),
+urinaryJet:v("usUrinaryJet")
+};
+}
+
+function getRenalStoneData(){
+let locations=[];
+if(document.getElementById("rsStaghornUpper").checked)locations.push("کالیس فوقانی");
+if(document.getElementById("rsStaghornMid").checked)locations.push("کالیس میانی");
+if(document.getElementById("rsStaghornLower").checked)locations.push("کالیس تحتانی");
+if(document.getElementById("rsStaghornPelvis").checked)locations.push("لگنچه");
+
+return{
+mode:v("rsMode"),
+side:v("rsSide"),
+singleLocation:v("rsSingleLocation"),
+singleSize:v("rsSingleSize"),
+count:v("rsCount"),
+upperSize:v("rsUpperSize",""),
+midSize:v("rsMidSize",""),
+lowerSize:v("rsLowerSize",""),
+pelvisSize:v("rsPelvisSize",""),
+staghornLocations:locations.length?locations:["کالیس‌های کلیه"],
+totalSize:v("rsTotalSize"),
+hydronephrosis:v("rsHydronephrosis"),
+apPelvisDiameter:v("rsAPPelvisDiameter")
+};
+}
+
+function getProstateData(){
+return{
+mode:v("prMode"),
+ml:v("prML"),
+ap:v("prAP"),
+cc:v("prCC"),
+includeVolume:v("prIncludeVolume"),
+transitionZone:v("prTransitionZone"),
+medianLobe:v("prMedianLobe"),
+medianLobeSize:v("prMedianLobeSize"),
+calcification:v("prCalcification"),
+calcificationType:v("prCalcificationType"),
+calcificationLocation:v("prCalcificationLocation"),
+prostatitisPattern:v("prProstatitisPattern")
+};
+}
+
+function generateAbdomenReport(){
+let report="";
+let indication=v("indication","");
+
+report+="نام و نام خانوادگی: "+v("patientName","")+"\n\n";
+report+="سن: "+v("age","")+"\n\n";
+if(indication!=="")report+="اندیکاسیون: "+indication+"\n\n";
+
+if(findings.fattyLiver){
+report+="افزایش مختصر اکوی پارانشیم کبد به نفع کبد چرب گرید I رویت شد. شواهدی از ضایعه فضاگیر یا اتساع مجاری صفراوی داخل و خارج کبدی رویت نشد.\n\n";
+}else{
+report+="کبد از نظر اندازه، اکوپترن و حدود طبیعی است. شواهدی از ضایعه فضاگیر یا اتساع مجاری صفراوی داخل و خارج کبدی رویت نشد.\n\n";
+}
+
+report+="کیسه صفرا از نظر اندازه، ضخامت جدار و محتویات طبیعی است.\n\n";
+report+="طحال از نظر اندازه و اکوپترن طبیعی است.\n\n";
+report+="پانکراس از نظر اندازه و اکوپترن طبیعی است.\n\n";
+
+if(findings.ureterStone || findings.renalStone){
+report+="کلیه راست به قطر طولی "+v("rkLength")+" میلی‌متر و ضخامت پارانشیم "+v("rkParenchyma")+" میلی‌متر و کلیه چپ به قطر طولی "+v("lkLength")+" میلی‌متر و ضخامت پارانشیم "+v("lkParenchyma")+" میلی‌متر اندازه‌گیری شدند. اکوی پارانشیم هر دو کلیه طبیعی بوده و افتراق کورتیکومدولاری حفظ شده است.\n\n";
+if(findings.renalStone)report+=FINDING_BANK.renalStone.generateFindingText(getRenalStoneData())+"\n\n";
+if(findings.ureterStone)report+=FINDING_BANK.ureterStone.generateFindingText(getUreterStoneData())+"\n\n";
+}else{
+report+="کلیه راست به قطر طولی "+v("rkLength")+" میلی‌متر و ضخامت پارانشیم "+v("rkParenchyma")+" میلی‌متر و کلیه چپ به قطر طولی "+v("lkLength")+" میلی‌متر و ضخامت پارانشیم "+v("lkParenchyma")+" میلی‌متر اندازه‌گیری شدند. اکوی پارانشیم هر دو کلیه طبیعی بوده و افتراق کورتیکومدولاری حفظ شده است. شواهدی از هیدرونفروز یا سنگ قابل مشاهده در کلیه‌ها رویت نشد.\n\n";
+}
+
+if(findings.bladderWall&&findings.bladderDebris){
+report+="مثانه دارای ضخامت جدار مختصراً افزایش یافته، حدود "+v("bladderWallThickness")+" میلی‌متر است. چند دبری اکوژن مختصر شناور در داخل مثانه رویت شد که می‌تواند در زمینه هماتوری، پیوری یا کریستالوری باشد. در صورت صلاحدید بالینی، تطبیق با یافته‌های UA و UC توصیه می‌شود.\n\n";
+}else if(findings.bladderWall){
+report+="مثانه دارای ضخامت جدار مختصراً افزایش یافته، حدود "+v("bladderWallThickness")+" میلی‌متر است.\n\n";
+}else if(findings.bladderDebris){
+report+="مثانه دارای ضخامت جدار طبیعی است. چند دبری اکوژن مختصر شناور در داخل مثانه رویت شد که می‌تواند در زمینه هماتوری، پیوری یا کریستالوری باشد. در صورت صلاحدید بالینی، تطبیق با یافته‌های UA و UC توصیه می‌شود.\n\n";
+}else{
+report+="مثانه دارای ضخامت جدار و محتویات طبیعی است.\n\n";
+}
+
+if(currentGender==="male"){
+if(findings.prostateEngine){
+report+=FINDING_BANK.prostateEngine.generateFindingText(getProstateData())+"\n\n";
+}else if(findings.bph){
+report+="پروستات با حجم تقریبی "+v("prostateVolume")+" سی‌سی بزرگ‌تر از حد طبیعی بوده و نمای آن به نفع BPH است.\n\n";
+}else{
+report+="پروستات از نظر ابعاد و اکوپترن طبیعی است.\n\n";
+}
+}else{
+report+="رحم از نظر اندازه و اکوپترن طبیعی است. ضخامت آندومتر "+v("endometriumThickness")+" میلی‌متر است. تخمدان‌های دو طرف از نظر اندازه و اکوپترن طبیعی بوده و ضایعه آدنکسال مشاهده نشد.\n\n";
+}
+
+if(findings.appendicitis){
+report+="در ناحیه RLQ، آپاندیس با قطر حدود "+v("appendixDiameter")+" میلی‌متر، غیرقابل فشرده شدن و همراه با تغییرات التهابی چربی اطراف رویت شد که به نفع آپاندیسیت حاد است. در حد قابل ارزیابی، شواهدی از collection یا perforation مشاهده نشد.\n\n";
+}
+
+report+="ضایعه پاتولوژیک واضحی در فضای پاراآئورتیک رویت نشد.\n\n";
+report+="مایع آزاد در حفره صفاقی مشاهده نشد.\n\n";
+report+="نتیجه‌گیری:\n\n";
+
+let imp=[];
+if(findings.renalStone)imp.push(FINDING_BANK.renalStone.generateImpression(getRenalStoneData()));
+if(findings.ureterStone)imp.push(FINDING_BANK.ureterStone.generateImpression(getUreterStoneData()));
+if(currentGender==="male"&&findings.prostateEngine){
+let prImp=FINDING_BANK.prostateEngine.generateImpression(getProstateData());
+if(prImp)imp.push(prImp);
+}
+if(findings.appendicitis)imp.push("شواهد سونوگرافیک به نفع آپاندیسیت حاد با قطر حدود "+v("appendixDiameter")+" میلی‌متر و التهاب چربی اطراف، بدون شواهد collection یا perforation در حد قابل ارزیابی");
+if(findings.fattyLiver)imp.push("کبد چرب گرید I");
+if(currentGender==="male"&&findings.bph)imp.push("بزرگی پروستات با حجم تقریبی "+v("prostateVolume")+" سی‌سی به نفع BPH");
+
+if(findings.bladderWall&&findings.bladderDebris){
+imp.push("افزایش خفیف ضخامت جدار مثانه همراه با چند دبری اکوژن شناور که می‌تواند در زمینه هماتوری، پیوری یا کریستالوری باشد؛ در صورت صلاحدید بالینی، تطبیق با یافته‌های UA و UC توصیه می‌شود");
+}else if(findings.bladderWall){
+imp.push("افزایش خفیف ضخامت جدار مثانه");
+}else if(findings.bladderDebris){
+imp.push("چند دبری اکوژن شناور در مثانه که می‌تواند در زمینه هماتوری، پیوری یا کریستالوری باشد؛ در صورت صلاحدید بالینی، تطبیق با یافته‌های UA و UC توصیه می‌شود");
+}
+
+report+=imp.length?imp.join(". ")+".":"سونوگرافی شکم و لگن در حد بررسی انجام‌شده طبیعی است.";
+document.getElementById("report").value=report;
+}
+
+function copyReport(){
+const report=document.getElementById("report");
+report.select();
+report.setSelectionRange(0,99999);
+navigator.clipboard.writeText(report.value);
+alert("گزارش کپی شد.");
+}
+
+function clearForm(){
+document.querySelectorAll("input").forEach(el=>{if(el.type==="checkbox")el.checked=false;else el.value=""});
+document.getElementById("indication").value="";
+document.getElementById("report").value="";
+Object.keys(findings).forEach(f=>findings[f]=false);
+setGender("male");
+renderFindings();
+}
+
+renderFindings();
